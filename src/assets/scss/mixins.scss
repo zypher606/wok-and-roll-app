@@ -1,0 +1,104 @@
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.item-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.btn {
+    border: none;
+    cursor: pointer;
+    align-items: center;
+}
+
+.input-label {
+    font-size: 15px;
+    color: grey;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.input-control {
+    padding: 10px;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid grey;
+}
+
+.gap-5 {
+    width: 100%;
+    height: 5px;
+}
+
+.gap-10 {
+    width: 100%;
+    height: 10px;
+}
+
+.gap-15 {
+    width: 100%;
+    height: 15px;
+}
+
+.gap-20 {
+    width: 100%;
+    height: 20px;
+}
+
+.gap-30 {
+    width: 100%;
+    height: 30px;
+}
+
+.gap-40 {
+    width: 100%;
+    height: 40px;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.btn-flat {
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+button[disabled].btn-flat {
+    cursor: not-allowed;
+}
+
+#sign-in-button {
+  margin-bottom: 10px;
+}
