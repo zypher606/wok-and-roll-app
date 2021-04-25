@@ -1,5 +1,66 @@
 .tab-bar-container {
-  position: absolute;
+  position: fixed;
   width: 100%;
   bottom: 0px;
+  background: #fff;
+  border-top: solid 1px #c7c7c7;
+  z-index: 1000;
+}
+
+.tab-panel-container {
+  padding-top: 20px;
+}
+
+.add-item-form {
+  text-align: center;
+  padding-bottom: 40px;
+}
+
+.input-box {
+  width: 100%;
+  margin-bottom: 14px !important;
+}
+
+.add-image-btn {
+  width: 100px;
+  height: 100px;
+
+  svg {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+
+.image-preview-container {
+  width: 150px;
+  height: 150px;
+  display: inline-block;
+  margin-bottom: 20px;
+  
+  .image-preview {
+    width: 150px;
+    height: 150px;
+  }
+
+  .delete-image-btn {
+    position: absolute;
+    margin-left: 120px;
+
+    svg {
+      // color: #fff;
+      color: red;
+    }
+  }
+}
+
+.item-collection {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+  padding-bottom: 100px;
+
+  li {
+    margin-bottom: 16px;
+  }
 }

@@ -1,9 +1,9 @@
 .quantity {
-    width: 100px;
+    width: 120px;
     border: solid 2px #424242;
-    height: 25px;
+    height: 32px;
     border-radius: 7px;
-    font-size: 15px;
+    font-size: 19px;
     overflow: hidden;
 
     &-btn:first-child{
@@ -27,8 +27,8 @@
         transition-duration: 100ms;
 
         img{
-            width: 15px;
-            height: 15px;
+            width: 20px;
+            height: 20px;
         }
     }
 
@@ -43,15 +43,15 @@
 
 @media only screen and (max-width: 768px) {
   .quantity{
-    width: 60px;
-    height: 18px;
-    font-size: 10px;
+    width: 90px;
+    height: 25px;
+    font-size: 14px;
     
     &-btn{
         padding: 0 3px;
         img{
-            width: 10px;
-            height: 10px;
+            width: 20px;
+            height: 20px;
         }
     }
   }

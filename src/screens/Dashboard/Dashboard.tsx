@@ -8,6 +8,9 @@ import FastfoodIcon from '@material-ui/icons/Fastfood';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import './dashboard.scss';
 import Account from './Account';
+import AddIcon from '@material-ui/icons/Add';
+import AddItem from './AddItem';
+import ItemList from './ItemList';
 
 interface ITabPanel {
   children: any;
@@ -26,10 +29,11 @@ function TabPanel(props: ITabPanel) {
       aria-labelledby={`scrollable-force-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
+      {
+        value === index && (
+        <Container className="tab-panel-container">
+          {children}
+        </Container>
       )}
     </div>
   );
@@ -64,13 +68,13 @@ export default function Dashboard() {
     <div>
       <div className="tab-body">
         <TabPanel value={activeTab} index={0}>
-          Item One
+          <ItemList />
         </TabPanel>
         <TabPanel value={activeTab} index={1}>
-          Item Two
+          <AddItem />
         </TabPanel>
         <TabPanel value={activeTab} index={2}>
-          Item Three
+          Orders
         </TabPanel>
         <TabPanel value={activeTab} index={3}>
           <Account />
@@ -87,7 +91,7 @@ export default function Dashboard() {
             textColor="primary"
           >
             <Tab label="Menu" icon={<FastfoodIcon />} {...a11yProps(0)} />
-            <Tab label="Delivery" icon={<DirectionsBikeIcon />} {...a11yProps(1)} />
+            <Tab label="Add" icon={<AddIcon />} {...a11yProps(1)} />
             <Tab label="Orders" icon={<MenuBookIcon />} {...a11yProps(2)} />
             <Tab label="Account" icon={<FaceIcon />} {...a11yProps(3)} />
         </Tabs>
