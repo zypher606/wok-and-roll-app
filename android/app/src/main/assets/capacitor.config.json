@@ -1,0 +1,8 @@
+{
+  "appId": "in.xarothi.wokandrolladmin",
+  "appName": "Wok and Roll",
+  "bundledWebRuntime": false,
+  "npmClient": "yarn",
+  "webDir": "build",
+  "cordova": {}
+}
