@@ -1,15 +1,13 @@
-import './dashboard.scss';
-
+import React, { useState } from 'react';
 import { Badge, Container, makeStyles, Tab, Tabs } from '@material-ui/core';
 import DirectionsBikeIcon from '@material-ui/icons/DirectionsBike';
 import FaceIcon from '@material-ui/icons/Face';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-import React, { useState } from 'react';
-
 import Account from './Account';
 import AddItem from './AddItem';
 import ItemList from './ItemList';
+import './dashboard.scss';
 
 interface ITabPanel {
   children: any;
