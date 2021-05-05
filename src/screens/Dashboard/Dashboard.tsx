@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
-import { makeStyles, Tab, Tabs, Container, Badge } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
+import './dashboard.scss';
+
+import { Badge, Container, makeStyles, Tab, Tabs } from '@material-ui/core';
 import DirectionsBikeIcon from '@material-ui/icons/DirectionsBike';
 import FaceIcon from '@material-ui/icons/Face';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-import './dashboard.scss';
+import React, { useState } from 'react';
+
 import Account from './Account';
-import AddIcon from '@material-ui/icons/Add';
 import AddItem from './AddItem';
 import ItemList from './ItemList';
 
