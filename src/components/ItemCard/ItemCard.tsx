@@ -1,23 +1,18 @@
-import React from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
+import { Button } from '@material-ui/core';
+import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+import IconButton from '@material-ui/core/IconButton';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import AddIcon from '@material-ui/icons/Add';
 import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import burgerImage from "../../assets/images/burger.jpg"; 
+import React, { useState } from 'react';
+
 import { ItemQuantity } from '..';
-import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,26 +28,37 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     itemQuantity: {
       marginLeft: 'auto',
+    },
+    cardHeader: {
+      '& span': {
+        fontSize: '1.2rem',
+      }
     }
   }),
 );
 
 export const ItemCard = ({item: {id, name, price, description, imageURL}, handleDelete}: any) => {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [quantity, setQuantity] = useState(0);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
+  const handleAddItemClick = () => {
+    setQuantity(1);
+  }
+
   return (
     <Card className={classes.root}>
       <CardHeader
         avatar={
-          <Avatar aria-label="recipe" className={classes.avatar}>
+          <Avatar aria-label="recipe" style={{backgroundColor: '#3f51b5'}} className={classes.avatar}>
             {name.slice(0, 1)}
           </Avatar>
         }
+        className={classes.cardHeader}
         title={name}
       />
       <CardMedia
@@ -65,7 +71,7 @@ export const ItemCard = ({item: {id, name, price, description, imageURL}, handle
           <FavoriteIcon />
         </IconButton> */}
         <IconButton aria-label="share">
-          <ShareIcon />
+          <ShareIcon style={{color: '#3f51b5'}} />
         </IconButton>
 
         <Typography variant="h6">
@@ -73,7 +79,25 @@ export const ItemCard = ({item: {id, name, price, description, imageURL}, handle
         </Typography>
 
         <div className={classes.itemQuantity}>
-          <ItemQuantity handleChange={() => {}} quantity={0} />
+          {
+            quantity === 0 &&
+            <Button
+              size="small"
+              variant="contained"
+              color="primary"
+              onClick={handleAddItemClick}
+              endIcon={<AddIcon/>}
+            >
+              Add
+            </Button>
+          }
+
+          {
+            quantity > 0 &&
+            <ItemQuantity handleChange={(q) => setQuantity(q)} quantity={quantity} />
+          }
+          
+            
         </div>
       </CardActions>
     </Card>

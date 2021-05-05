@@ -17,7 +17,7 @@ export const ItemQuantity = ({ quantity, itemsAvailable, handleChange }: IItemQu
 
   const changeQuantity = (value: number) => {
     const result = quantityValue + value;
-    if (result < 1 || (itemsAvailable && result > itemsAvailable)) return;
+    if (result < 0 || (itemsAvailable && result > itemsAvailable)) return;
 
     setQualtityValue(result);
     handleChange(result);

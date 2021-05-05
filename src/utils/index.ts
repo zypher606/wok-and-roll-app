@@ -1,0 +1,1 @@
+export { getColorCode } from './colours';

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { makeStyles, Tab, Tabs, Container } from '@material-ui/core';
+import { makeStyles, Tab, Tabs, Container, Badge } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import DirectionsBikeIcon from '@material-ui/icons/DirectionsBike';
@@ -53,6 +53,10 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     backgroundColor: theme.palette.background.paper,
   },
+  customBadge: {
+    backgroundColor: "#3f51b5",
+    color: "white"
+  },
 }));
 
 export default function Dashboard() {
@@ -91,8 +95,18 @@ export default function Dashboard() {
             textColor="primary"
           >
             <Tab label="Menu" icon={<FastfoodIcon />} {...a11yProps(0)} />
-            <Tab label="Add" icon={<AddIcon />} {...a11yProps(1)} />
-            <Tab label="Orders" icon={<MenuBookIcon />} {...a11yProps(2)} />
+            {/* <Tab label="Add" icon={<AddIcon />} {...a11yProps(1)} /> */}
+            <Tab label="Delivery" icon={<DirectionsBikeIcon />} {...a11yProps(1)} />
+            <Tab label="Orders" 
+              icon={
+                <Badge 
+                  classes={{ badge: classes.customBadge }} 
+                  badgeContent={4}>
+                    <MenuBookIcon />
+                </Badge>
+              } 
+              {...a11yProps(2)} 
+            />
             <Tab label="Account" icon={<FaceIcon />} {...a11yProps(3)} />
         </Tabs>
       </div>
