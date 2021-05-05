@@ -5,7 +5,7 @@ import { Snackbar } from "@material-ui/core";
 
 const db = firebase.firestore();
 
-export default function ItemList() {
+export default function ItemList({ cart, setCart }: any) {
 
   const [items, setItems] = useState<any[]>([]);
   const [openSuccessToast, setOpenSuccessToast] = useState(false);
@@ -28,13 +28,36 @@ export default function ItemList() {
     setItems(items);
   }
 
-  const handleDelete = async (id: string) => {
-    const snapshot: any = await db.collection('items').where('id', '==', id).get();
-    snapshot.forEach((doc: any) => {
-      doc.ref.delete();
-    });
-    setOpenSuccessToast(true);
-    fetchItems();
+  // const handleDelete = async (id: string) => {
+  //   const snapshot: any = await db.collection('items').where('id', '==', id).get();
+  //   snapshot.forEach((doc: any) => {
+  //     doc.ref.delete();
+  //   });
+  //   setOpenSuccessToast(true);
+  //   fetchItems();
+  // }
+
+  const handleQuantityChange = (payload: {id: string, quantity: number}) => {
+    if (payload.quantity === 0) {
+      setCart(cart.filter((item: any) => item.id !== payload.id));
+      return;
+    }
+
+    const isInCart = cart.find((item: any) => item.id === payload.id);
+    let newCart: any;
+    if (isInCart) {
+      newCart = cart.map((item: any) => {
+        if (item.id === payload.id) {
+          return { ...item, quantity: payload.quantity };
+        }
+        return item;
+      });
+    } else {
+      const newItem = items.find((item: any) => item.id === payload.id);
+      newCart= [...cart, { ...newItem, quantity: payload.quantity }];
+    }
+    
+    setCart(newCart);
   }
 
   return (
@@ -43,7 +66,7 @@ export default function ItemList() {
         {
           items.map(item => (
             <li key={item.id} className="list-item">
-              <ItemCard item={item} handleDelete={handleDelete} />
+              <ItemCard item={item} handleQuantityChange={handleQuantityChange} />
             </li>
           ))
         }

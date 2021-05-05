@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Badge, Container, makeStyles, Tab, Tabs } from '@material-ui/core';
 import DirectionsBikeIcon from '@material-ui/icons/DirectionsBike';
 import FaceIcon from '@material-ui/icons/Face';
@@ -60,6 +60,7 @@ export default function Dashboard() {
 
   const classes = useStyles();
   const [activeTab, setActiveTab] = useState(0);
+  const [cart, setCart] = useState([]);
 
   const handleChange = (event: any, newValue: any) => {
     setActiveTab(newValue);
@@ -69,7 +70,7 @@ export default function Dashboard() {
     <div>
       <div className="tab-body">
         <TabPanel value={activeTab} index={0}>
-          <ItemList />
+          <ItemList cart={cart} setCart={setCart} />
         </TabPanel>
         <TabPanel value={activeTab} index={1}>
           <AddItem />
@@ -94,11 +95,11 @@ export default function Dashboard() {
             <Tab label="Menu" icon={<FastfoodIcon />} {...a11yProps(0)} />
             {/* <Tab label="Add" icon={<AddIcon />} {...a11yProps(1)} /> */}
             <Tab label="Delivery" icon={<DirectionsBikeIcon />} {...a11yProps(1)} />
-            <Tab label="Orders" 
+            <Tab label="Cart" 
               icon={
                 <Badge 
                   classes={{ badge: classes.customBadge }} 
-                  badgeContent={4}>
+                  badgeContent={cart.length}>
                     <MenuBookIcon />
                 </Badge>
               } 
