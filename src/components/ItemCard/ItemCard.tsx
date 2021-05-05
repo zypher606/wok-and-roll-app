@@ -53,11 +53,6 @@ export const ItemCard = ({item: {id, name, price, description, imageURL}, handle
             {name.slice(0, 1)}
           </Avatar>
         }
-        action={
-          <IconButton onClick={() => handleDelete(id)} aria-label="delete">
-            <DeleteOutlinedIcon />
-          </IconButton>
-        }
         title={name}
       />
       <CardMedia
