@@ -8,6 +8,7 @@ import Account from './Account';
 import AddItem from './AddItem';
 import ItemList from './ItemList';
 import './dashboard.scss';
+import Cart from './Cart';
 
 interface ITabPanel {
   children: any;
@@ -76,7 +77,7 @@ export default function Dashboard() {
           <AddItem />
         </TabPanel>
         <TabPanel value={activeTab} index={2}>
-          Orders
+          <Cart cart={cart}/>
         </TabPanel>
         <TabPanel value={activeTab} index={3}>
           <Account />
