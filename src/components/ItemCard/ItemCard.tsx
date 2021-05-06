@@ -37,22 +37,22 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const ItemCard = ({item: {id, name, price, description, imageURL}, handleQuantityChange}: any) => {
+export const ItemCard = ({item: {id, name, price, quantity, description, imageURL}, handleQuantityChange}: any) => {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
-  const [quantity, setQuantity] = useState(0);
+  // const [quantity, setQuantity] = useState(0);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
   const handleAddItemClick = () => {
-    setQuantity(1);
+    // setQuantity(1);
     handleQuantityChange({id, quantity: 1});
   }
 
   const handleItemQuantityChange = (q: number) => {
-    setQuantity(q);
+    // setQuantity(q);
     handleQuantityChange({id, quantity: q});
   }
 

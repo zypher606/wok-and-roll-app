@@ -7,8 +7,12 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import Account from './Account';
 import AddItem from './AddItem';
 import ItemList from './ItemList';
-import './dashboard.scss';
 import Cart from './Cart';
+import firebase from 'firebase';
+import './dashboard.scss';
+import Delivery from './Delivery';
+
+const db = firebase.firestore();
 
 interface ITabPanel {
   children: any;
@@ -61,23 +65,83 @@ export default function Dashboard() {
 
   const classes = useStyles();
   const [activeTab, setActiveTab] = useState(0);
+  const [items, setItems] = useState<any[]>([]);
   const [cart, setCart] = useState([]);
 
   const handleChange = (event: any, newValue: any) => {
     setActiveTab(newValue);
   };
 
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
+  const fetchItems = async () => {
+    const snapshot: any = await db.collection('items').get();
+    const items: any[] = [];
+    await snapshot.forEach(async (doc: any) => {
+      const data = await doc.data();
+      items.push({ ...data, quantity: 0 });
+    });
+
+    setItems(items);
+  }
+
+  const handleQuantityChange = (payload: {id: string, quantity: number}) => {
+
+    setItems(items.map((item: any) => {
+      if (item.id === payload.id) {
+        return { ...item, quantity: payload.quantity };
+      };
+      return item;
+    }))
+
+    if (payload.quantity === 0) {
+      setCart(cart.filter((item: any) => item.id !== payload.id));
+      return;
+    }
+
+    const isInCart = cart.find((item: any) => item.id === payload.id);
+    let newCart: any;
+    if (isInCart) {
+      newCart = cart.map((item: any) => {
+        if (item.id === payload.id) {
+          return { ...item, quantity: payload.quantity };
+        }
+        return item;
+      });
+    } else {
+      const newItem = items.find((item: any) => item.id === payload.id);
+      newCart= [...cart, { ...newItem, quantity: payload.quantity }];
+    }
+    
+    setCart(newCart);
+  }
+
+  const handleOrderSuccess = () => {
+    setCart([]);
+    setItems(items.map((item: any) => {
+      return { ...item, quantity: 0 };
+    }))
+  }
+
   return (
     <div>
       <div className="tab-body">
         <TabPanel value={activeTab} index={0}>
-          <ItemList cart={cart} setCart={setCart} />
+          <ItemList 
+            cart={cart} 
+            setCart={setCart} 
+            items={items} 
+            handleQuantityChange={handleQuantityChange} />
         </TabPanel>
         <TabPanel value={activeTab} index={1}>
-          <AddItem />
+          <Delivery />
         </TabPanel>
         <TabPanel value={activeTab} index={2}>
-          <Cart cart={cart}/>
+          <Cart 
+            cart={cart} 
+            handleOrderSuccess={handleOrderSuccess}/>
         </TabPanel>
         <TabPanel value={activeTab} index={3}>
           <Account />
