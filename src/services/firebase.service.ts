@@ -7,7 +7,6 @@ export class FirebaseService {
   public firebaseDB: any = null;
 
   constructor(config: any) {
-    console.log({firebaseConfig})
     firebase.initializeApp(config);
     this.firebaseAuth = firebase.auth;
     this.firebaseDB = firebase.database();
