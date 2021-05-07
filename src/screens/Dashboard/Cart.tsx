@@ -73,6 +73,14 @@ export default function Cart({ cart: defaultCart, handleOrderSuccess }: any) {
     window.open(whatsAppMessage);
   }
 
+  const getTotalAmount = () => {
+    let total = 0;
+    cart.forEach((item: any) => {
+      total += item.price * item.quantity;
+    });
+    return total;
+  }
+
   return (
 
     <div>
@@ -97,7 +105,7 @@ export default function Cart({ cart: defaultCart, handleOrderSuccess }: any) {
                       color="textPrimary"
                       style={{float: 'right'}}
                     >
-                      ₹300
+                      ₹{getTotalAmount()}
                     </Typography>
                     <Typography
                       component="span"
@@ -115,7 +123,17 @@ export default function Cart({ cart: defaultCart, handleOrderSuccess }: any) {
 
             </ListItem>
           </List>
-          <Button onClick={handleOrderConfirmation} size="large" className={classes.orderNowBtn} endIcon={<LocationOnIcon/>} variant="contained" color="primary">
+          {
+            getTotalAmount() < 200 &&
+            <div>
+              <Typography style={{color: 'red'}}>
+                *Minimum amount is 200 to order
+              </Typography>
+              <br/>
+            </div>
+          }
+          
+          <Button disabled={getTotalAmount() < 200} onClick={handleOrderConfirmation} size="large" className={classes.orderNowBtn} endIcon={<LocationOnIcon/>} variant="contained" color="primary">
             Share Location and Order
           </Button>
 

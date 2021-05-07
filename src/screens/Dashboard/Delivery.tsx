@@ -54,7 +54,7 @@ export default function Delivery({activeOrders}: any) {
             <DirectionsBikeIcon style={{color: '#3f51b5', fontSize: '8rem'}} />
           </Typography>
           <Typography style={{color: '#3f51b5'}} align='center' variant='h5'>
-            Order No. #{activeOrders[0].orderNo}
+            Order No. {activeOrders.map((item: any) => (`#${item.orderNo}`)).join(', ')}
           </Typography>
           <Typography style={{color: '#3f51b5'}} align='center' variant='h6'>
             Our delivery guy will be at your shared WhatsApp location in 35 mins.
