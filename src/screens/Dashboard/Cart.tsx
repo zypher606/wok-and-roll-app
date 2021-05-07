@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function Cart({ cart: defaultCart, handleOrderSuccess }: any) {
+export default function Cart({ user, cart: defaultCart, handleOrderSuccess }: any) {
   const classes = useStyles();
   const [cart, setCart] = useState(defaultCart);
   const [openSuccessToast, setOpenSuccessToast] = useState(false);
@@ -59,6 +59,7 @@ export default function Cart({ cart: defaultCart, handleOrderSuccess }: any) {
       id: uuidv4(),
       orderNo: size + 1,
       cart,
+      userId: user.id,
       status: 'active',
       date: new Date().toISOString(),
     }).then(res => {
@@ -94,7 +95,7 @@ export default function Cart({ cart: defaultCart, handleOrderSuccess }: any) {
           <List className={classes.root}>
             {
               cart.map((item: any) => (
-                <CartItem item={item} />
+                <CartItem key={item.id} item={item} />
               ))
             }
             
@@ -123,8 +124,6 @@ export default function Cart({ cart: defaultCart, handleOrderSuccess }: any) {
                 }
                 className={classes.itemBody}
               />
-          
-
             </ListItem>
           </List>
           {
@@ -198,7 +197,7 @@ function CartItem({ item }: any) {
         </ListItemAvatar>
         <ListItemText
           primary={
-            <div style={{paddingTop: '4px'}}>
+            <>
               <Typography
                 align="right"
                 variant="h6"
@@ -208,12 +207,12 @@ function CartItem({ item }: any) {
               >
                 ₹{item.price * item.quantity}
               </Typography>
-              <div style={{fontSize: '1.2rem'}}>{item.name}</div>
+              <Typography style={{fontSize: '1.2rem', marginTop: '4px'}}>{item.name}</Typography>
 
-            </div>
+            </>
           }
           secondary={
-            <div>
+            <>
               
               <Typography
                 component="span"
@@ -224,7 +223,7 @@ function CartItem({ item }: any) {
                 @ ₹{item.price} x {item.quantity}
               </Typography>
               
-            </div>
+            </>
             
           }
           className={classes.itemBody}

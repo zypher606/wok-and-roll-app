@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Badge, Container, makeStyles, Tab, Tabs } from '@material-ui/core';
+import { Badge, Container, makeStyles, Tab, Tabs, useScrollTrigger } from '@material-ui/core';
 import DirectionsBikeIcon from '@material-ui/icons/DirectionsBike';
 import FaceIcon from '@material-ui/icons/Face';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
@@ -11,6 +11,8 @@ import Cart from './Cart';
 import firebase from 'firebase';
 import './dashboard.scss';
 import Delivery from './Delivery';
+import { User } from '../../models/User';
+import { v4 as uuidv4 } from "uuid";
 
 const db = firebase.firestore();
 
@@ -68,15 +70,16 @@ export default function Dashboard() {
   const [items, setItems] = useState<any[]>([]);
   const [activeOrders, setActiveOrders] = useState<any[]>([]);
   const [cart, setCart] = useState([]);
+  const [user, setUser] = useState<any>({});
 
   const handleChange = (event: any, newValue: any) => {
     setActiveTab(newValue);
-    if (newValue === 1) fetchActiveOrders();
+    if (newValue === 1) fetchActiveOrders(user);
   };
 
   useEffect(() => {
     fetchItems();
-    fetchActiveOrders();
+    fetchUserByPhone(User.getInstance().UserData.phone);
   }, []);
 
   const fetchItems = async () => {
@@ -90,14 +93,15 @@ export default function Dashboard() {
     setItems(items);
   }
 
-  const fetchActiveOrders = async () => {
-    const snapshot: any = await db.collection('orders').where('status', '==', 'active').get();
-    const items: any[] = [];
+  const fetchActiveOrders = async (user: any) => {
+    const snapshot: any = await db.collection('orders').where('userId', '==', user.id).get();
+    let items: any[] = [];
     await snapshot.forEach(async (doc: any) => {
       const data = await doc.data();
       items.push({ ...data });
     });
 
+    items = items.filter((item: any) => item.status === 'active');
     setActiveOrders(items);
   }
 
@@ -136,7 +140,37 @@ export default function Dashboard() {
     setCart([]);
     setItems(items.map((item: any) => {
       return { ...item, quantity: 0 };
-    }))
+    }));
+    fetchActiveOrders(user);
+  }
+
+  const fetchUserByPhone = async (phone: string) => {
+    const snapshot: any = await db.collection('users').where('phoneNumber', '==', phone).get();
+    const items: any[] = [];
+    await snapshot.forEach(async (doc: any) => {
+      const data = await doc.data();
+      items.push({ ...data });
+    });
+
+    let user;
+    if (items.length === 0) {
+      user = {
+        id: uuidv4(),
+        displayName: null,
+        phoneNumber: phone,
+        emailVerified: false,
+        dateCreated: new Date().toISOString(),
+      }
+  
+      db.collection('users').add(user)
+      .then(res => {})
+      .catch(err => {});
+
+    } else {
+      user = items[0];
+    };
+    setUser(user);
+    fetchActiveOrders(user);
   }
 
   return (
@@ -154,6 +188,7 @@ export default function Dashboard() {
         </TabPanel>
         <TabPanel value={activeTab} index={2}>
           <Cart 
+            user={user}
             cart={cart} 
             handleOrderSuccess={handleOrderSuccess}/>
         </TabPanel>

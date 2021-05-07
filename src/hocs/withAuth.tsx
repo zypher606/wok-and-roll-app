@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-// import { LoaderBar, SetUserNamePopup } from '../components';
 import { firebaseService } from '../services/firebase.service';
 import { User } from '../models/User';
-import { CircularLoader } from '../components';
-// import { showToast, PopupUtility } from '../utilities';
-// import { TOAST_CONTAINER_ID, POPUP_CONTAINER_ID } from '../AppConfig';
-// import { LOGGED_IN_MESSAGE, USER_SET_NAME_MESSAGE } from '../AppConstants';
+import logo from "../assets/images/logo.png";
+import { LinearProgress } from '@material-ui/core';
 
 export const withAuth = (AppComponent: any) => {
+
   return class AuthWrapper extends Component<any, any> {
     state = {
       authenticated: false,
@@ -65,9 +63,12 @@ export const withAuth = (AppComponent: any) => {
       const { loading } = this.state;
       return (
         <>
-          {/* <div id={TOAST_CONTAINER_ID} /> */}
-          {loading ? <CircularLoader /> : <AppComponent {...this.state} {...this.props} />}
-          {/* <div id={POPUP_CONTAINER_ID} /> */}
+          {loading ? 
+            <div style={{textAlign: 'center'}}>
+              <img className='logo' src={logo} alt="app logo" />
+              <LinearProgress style={{width: '60%', marginLeft: '20%'}} />
+            </div>
+            : <AppComponent {...this.state} {...this.props} />}
         </>
       );
     }
