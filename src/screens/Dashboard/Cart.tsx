@@ -8,7 +8,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { ListItemSecondaryAction, Button, Snackbar } from '@material-ui/core';
-import { ItemQuantity, Alert } from '../../components';
+import { ItemQuantity, Alert, CircularLoader } from '../../components';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import firebase from 'firebase';
 import { v4 as uuidv4 } from "uuid";
@@ -45,12 +45,14 @@ export default function Cart({ cart: defaultCart, handleOrderSuccess }: any) {
   const [openSuccessToast, setOpenSuccessToast] = useState(false);
   const [openErrorToast, setOpenErrorToast] = useState(false);
   const [whatsAppMessage, setWhatsAppMessage] = useState('');
+  const [orderSaveLoading, setOrderSaveLoading] = useState(false);
 
   useEffect(() => {
     setCart(defaultCart);
-  }, [defaultCart])
-  const handleOrderConfirmation = async () => {
+  }, [defaultCart]);
 
+  const handleOrderConfirmation = async () => {
+    setOrderSaveLoading(true);
     const size = (await db.collection('orders').get()).docs.length
 
     db.collection('orders').add({
@@ -63,8 +65,10 @@ export default function Cart({ cart: defaultCart, handleOrderSuccess }: any) {
       setOpenSuccessToast(true);
       setWhatsAppMessage(`https://api.whatsapp.com/send?phone=+918133862037&text=Hi Wok and Roll, I would like to confirm my order number ${size + 1}. Kindly deliver my stuff at the below WhatsApp location.`);
       handleOrderSuccess();
+      setOrderSaveLoading(false);
     }).catch(err => {
       setOpenErrorToast(true);
+      setOrderSaveLoading(false);
     });
   }
 
@@ -133,9 +137,20 @@ export default function Cart({ cart: defaultCart, handleOrderSuccess }: any) {
             </div>
           }
           
-          <Button disabled={getTotalAmount() < 200} onClick={handleOrderConfirmation} size="large" className={classes.orderNowBtn} endIcon={<LocationOnIcon/>} variant="contained" color="primary">
-            Share Location and Order
-          </Button>
+          {
+            orderSaveLoading === true &&
+            <div style={{textAlign: 'center'}}>
+              <CircularLoader />
+            </div>
+          }
+
+          {
+            orderSaveLoading === false &&
+            <Button disabled={getTotalAmount() < 200} onClick={handleOrderConfirmation} size="large" className={classes.orderNowBtn} endIcon={<LocationOnIcon/>} variant="contained" color="primary">
+              Share Location and Order
+            </Button>
+          }
+          
 
         </div>
 

@@ -6,8 +6,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles } from '@material-ui/core/styles';
 import CallIcon from '@material-ui/icons/Call';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-
+import logo from "../../assets/images/logo.png";
 import { firebaseService } from '../../services/firebase.service';
+import { Typography, Divider } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,12 +16,15 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
   },
+  logo: {
+    width: '40%',
+    border: 'solid 1px #0d3360',
+    borderRadius: '50%',
+    boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)',
+    marginTop: '7%',
+    marginBottom: '26px',
+  }
 }));
-
-function ListItemLink(props: any) {
-  return <ListItem button component="a" {...props} />;
-}
-
 
 
 export default function Account() {
@@ -31,10 +35,24 @@ export default function Account() {
     firebaseService.signOut();
   }
 
+  const handleRestaurantCall = () => {
+    window.open('tel:+919101184926');
+  }
+
   return (
     <div className={classes.root}>
+      <div style={{textAlign: 'center'}}>
+        <img className={classes.logo} src={logo} alt="app logo" />
+      </div>
+      <Typography align='center'>
+        Hi User, we at <strong>Wok & Roll</strong> make sure that you enjoy each and every bite of our inhouse engineered dishes. Feel free to reach us out if you have any queries.
+      </Typography>
+      <br/>
+      <br/>
+      <Divider/>
+      <br/>
       <List component="nav" aria-label="main mailbox folders">
-        <ListItem button>
+        <ListItem button onClick={handleRestaurantCall}>
           <ListItemIcon>
             <CallIcon />
           </ListItemIcon>
