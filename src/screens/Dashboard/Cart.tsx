@@ -58,6 +58,7 @@ export default function Cart({ cart: defaultCart, handleOrderSuccess }: any) {
       orderNo: size + 1,
       cart,
       status: 'active',
+      date: new Date().toISOString(),
     }).then(res => {
       setOpenSuccessToast(true);
       setWhatsAppMessage(`https://api.whatsapp.com/send?phone=+918133862037&text=Hi Wok and Roll, I would like to confirm my order number ${size + 1}. Kindly deliver my stuff at the below WhatsApp location.`);

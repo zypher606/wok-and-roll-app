@@ -66,14 +66,17 @@ export default function Dashboard() {
   const classes = useStyles();
   const [activeTab, setActiveTab] = useState(0);
   const [items, setItems] = useState<any[]>([]);
+  const [activeOrders, setActiveOrders] = useState<any[]>([]);
   const [cart, setCart] = useState([]);
 
   const handleChange = (event: any, newValue: any) => {
     setActiveTab(newValue);
+    if (newValue === 1) fetchActiveOrders();
   };
 
   useEffect(() => {
     fetchItems();
+    fetchActiveOrders();
   }, []);
 
   const fetchItems = async () => {
@@ -85,6 +88,17 @@ export default function Dashboard() {
     });
 
     setItems(items);
+  }
+
+  const fetchActiveOrders = async () => {
+    const snapshot: any = await db.collection('orders').where('status', '==', 'active').get();
+    const items: any[] = [];
+    await snapshot.forEach(async (doc: any) => {
+      const data = await doc.data();
+      items.push({ ...data });
+    });
+
+    setActiveOrders(items);
   }
 
   const handleQuantityChange = (payload: {id: string, quantity: number}) => {
@@ -136,7 +150,7 @@ export default function Dashboard() {
             handleQuantityChange={handleQuantityChange} />
         </TabPanel>
         <TabPanel value={activeTab} index={1}>
-          <Delivery />
+          <Delivery activeOrders={activeOrders} />
         </TabPanel>
         <TabPanel value={activeTab} index={2}>
           <Cart 
@@ -159,8 +173,16 @@ export default function Dashboard() {
           >
             <Tab label="Menu" icon={<FastfoodIcon />} {...a11yProps(0)} />
             {/* <Tab label="Add" icon={<AddIcon />} {...a11yProps(1)} /> */}
-            <Tab label="Delivery" icon={<DirectionsBikeIcon />} {...a11yProps(1)} />
-            <Tab label="Cart" 
+            <Tab 
+              label="Delivery" 
+              icon={
+                <Badge classes={{ badge: classes.customBadge }} color="secondary" variant={activeOrders.length > 0 ? 'dot' : 'standard'}>
+                  <DirectionsBikeIcon />
+                </Badge>
+              } 
+              {...a11yProps(1)} />
+            <Tab 
+              label="Cart" 
               icon={
                 <Badge 
                   classes={{ badge: classes.customBadge }} 
