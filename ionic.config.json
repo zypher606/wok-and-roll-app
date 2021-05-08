@@ -1,0 +1,7 @@
+{
+  "name": "Wok and Roll",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
