@@ -245,7 +245,7 @@ export default function Dashboard() {
                 handleOrderSuccess={handleOrderSuccess}/>
             </TabPanel>
             <TabPanel value={activeTab} index={3}>
-              <Account />
+              <Account user={user} />
             </TabPanel>
           </div>
 

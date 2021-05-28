@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Account() {
+export default function Account({ user }: any) {
 
   const classes = useStyles();
 
@@ -45,7 +45,7 @@ export default function Account() {
         <img className={classes.logo} src={logo} alt="app logo" />
       </div>
       <Typography align='center'>
-        Hi User, we at <strong>Wok & Roll</strong> make sure that you enjoy each and every bite of our inhouse engineered dishes. Feel free to reach us out if you have any queries.
+        Hi <strong>{user.displayName}</strong>, we at <strong>Wok & Roll</strong> make sure that you enjoy each and every bite of our inhouse engineered dishes. Feel free to reach us out if you have any queries.
       </Typography>
       <br/>
       <br/>
