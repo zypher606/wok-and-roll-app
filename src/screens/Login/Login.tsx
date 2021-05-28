@@ -10,10 +10,11 @@ import {
 import firebaseConfig from "../../config/firebase.config";
 import logo from "../../assets/images/logo.png";
 import './login.scss';
-import { TextField, Button, Container } from "@material-ui/core";
+import { TextField, Button, Container, IconButton } from "@material-ui/core";
 import { firebaseService } from "../../services/firebase.service";
 import { CAPTCHA_CONTAINER_ID } from "../../config/app.config";
 import { CircularLoader } from "../../components";
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import { v4 as uuidv4 } from "uuid";
 
 const db = firebase.firestore();
@@ -42,6 +43,10 @@ export default function Login() {
       }
     );
   };
+
+  const backToLogin = () => {
+    setHasOtpSent(false);
+  }
 
   const verifyOtp = () => {
     if (isOTPSent()) {
@@ -81,7 +86,15 @@ export default function Login() {
 
   return (
     <div className="screen-container">
+      {
+        hasOtpSent &&
+        <IconButton onClick={backToLogin} aria-label="delete" className="back-btn">
+          <KeyboardBackspaceIcon fontSize="large" />
+        </IconButton>
+      }
+      
       <Container>
+        
         <img className="logo" src={logo} alt="app logo" />
 
         <form onSubmit={(e) => e.preventDefault()} className="loginForm" noValidate autoComplete="off">
@@ -113,9 +126,11 @@ export default function Login() {
 
               {
                 authIsLoading === false &&
-                <Button disabled={!otp.match(/^\d{6}$/)} onClick={verifyOtp} size='large' className="loginBtn" variant="contained" color="primary">
-                  Verify OTP
-                </Button>
+                <div>
+                  <Button disabled={!otp.match(/^\d{6}$/)} onClick={verifyOtp} size='large' className="loginBtn" variant="contained" color="primary">
+                    Verify OTP
+                  </Button>
+                </div>
               }
               
             </div>
