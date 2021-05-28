@@ -64,3 +64,24 @@
     margin-bottom: 16px;
   }
 }
+
+.display-name {
+  height: 100vh;
+  width: 90%;
+  background-color: #fff;
+  text-align: center;
+  margin-left: 5%;
+  padding-top: 45%;
+  
+  .welcome-text {
+    font-weight: 100;
+  }
+
+  .displayNameInput {
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  .displayNameSaveBtn {
+    width: 100%;
+  }
+}

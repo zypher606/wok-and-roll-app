@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Badge, Container, makeStyles, Tab, Tabs, useScrollTrigger } from '@material-ui/core';
+import { Badge, Container, makeStyles, Tab, Tabs, useScrollTrigger, TextField, Button, LinearProgress } from '@material-ui/core';
 import DirectionsBikeIcon from '@material-ui/icons/DirectionsBike';
 import FaceIcon from '@material-ui/icons/Face';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
@@ -12,6 +12,7 @@ import firebase from 'firebase';
 import './dashboard.scss';
 import Delivery from './Delivery';
 import { User } from '../../models/User';
+import logo from "../../assets/images/logo.png";
 import { v4 as uuidv4 } from "uuid";
 
 const db = firebase.firestore();
@@ -71,6 +72,8 @@ export default function Dashboard() {
   const [activeOrders, setActiveOrders] = useState<any[]>([]);
   const [cart, setCart] = useState([]);
   const [user, setUser] = useState<any>({});
+  const [displayName, setDisplayName] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const handleChange = (event: any, newValue: any) => {
     setActiveTab(newValue);
@@ -91,6 +94,7 @@ export default function Dashboard() {
     });
 
     setItems(items);
+    setLoading(false);
   }
 
   const fetchActiveOrders = async (user: any) => {
@@ -149,7 +153,7 @@ export default function Dashboard() {
     const items: any[] = [];
     await snapshot.forEach(async (doc: any) => {
       const data = await doc.data();
-      items.push({ ...data });
+      items.push({ ...data, docId: doc.id });
     });
 
     let user;
@@ -171,65 +175,106 @@ export default function Dashboard() {
     };
     setUser(user);
     fetchActiveOrders(user);
+    if (items.length > 0) setLoading(false);
+  }
+  
+  const saveDisplayName = () => {
+    setLoading(true);
+    const { docId, ...userData } = user; 
+    db.collection("users").doc(docId).update({
+      ...userData,
+      displayName,
+    }).then(res => {
+      fetchUserByPhone(User.getInstance().UserData.phone);
+    }).catch(err => {});
   }
 
   return (
     <div>
-      <div className="tab-body">
-        <TabPanel value={activeTab} index={0}>
-          <ItemList 
-            cart={cart} 
-            setCart={setCart} 
-            items={items} 
-            handleQuantityChange={handleQuantityChange} />
-        </TabPanel>
-        <TabPanel value={activeTab} index={1}>
-          <Delivery activeOrders={activeOrders} />
-        </TabPanel>
-        <TabPanel value={activeTab} index={2}>
-          <Cart 
-            user={user}
-            cart={cart} 
-            handleOrderSuccess={handleOrderSuccess}/>
-        </TabPanel>
-        <TabPanel value={activeTab} index={3}>
-          <Account />
-        </TabPanel>
-      </div>
 
-      <div className="tab-bar-container">
-        <Tabs
-            value={activeTab}
-            onChange={handleChange}
-            variant="fullWidth"
-            scrollButtons="on"
-            indicatorColor="primary"
-            textColor="primary"
-          >
-            <Tab label="Menu" icon={<FastfoodIcon />} {...a11yProps(0)} />
-            {/* <Tab label="Add" icon={<AddIcon />} {...a11yProps(1)} /> */}
-            <Tab 
-              label="Delivery" 
-              icon={
-                <Badge classes={{ badge: classes.customBadge }} color="secondary" variant={activeOrders.length > 0 ? 'dot' : 'standard'}>
-                  <DirectionsBikeIcon />
-                </Badge>
-              } 
-              {...a11yProps(1)} />
-            <Tab 
-              label="Cart" 
-              icon={
-                <Badge 
-                  classes={{ badge: classes.customBadge }} 
-                  badgeContent={cart.length}>
-                    <MenuBookIcon />
-                </Badge>
-              } 
-              {...a11yProps(2)} 
-            />
-            <Tab label="Account" icon={<FaceIcon />} {...a11yProps(3)} />
-        </Tabs>
-      </div>
+      {
+        loading &&
+        <div style={{textAlign: 'center'}}>
+          <img className='logo' src={logo} alt="app logo" />
+          <LinearProgress style={{width: '60%', marginLeft: '20%'}} />
+        </div>
+      }
+      {
+        !loading && user.displayName &&
+        <div>
+          <div className="tab-body">
+            <TabPanel value={activeTab} index={0}>
+              <ItemList 
+                cart={cart} 
+                setCart={setCart} 
+                items={items} 
+                handleQuantityChange={handleQuantityChange} />
+            </TabPanel>
+            <TabPanel value={activeTab} index={1}>
+              <Delivery activeOrders={activeOrders} />
+            </TabPanel>
+            <TabPanel value={activeTab} index={2}>
+              <Cart 
+                user={user}
+                cart={cart} 
+                handleOrderSuccess={handleOrderSuccess}/>
+            </TabPanel>
+            <TabPanel value={activeTab} index={3}>
+              <Account />
+            </TabPanel>
+          </div>
+
+          <div className="tab-bar-container">
+            <Tabs
+                value={activeTab}
+                onChange={handleChange}
+                variant="fullWidth"
+                scrollButtons="on"
+                indicatorColor="primary"
+                textColor="primary"
+              >
+                <Tab label="Menu" icon={<FastfoodIcon />} {...a11yProps(0)} />
+                {/* <Tab label="Add" icon={<AddIcon />} {...a11yProps(1)} /> */}
+                <Tab 
+                  label="Delivery" 
+                  icon={
+                    <Badge classes={{ badge: classes.customBadge }} color="secondary" variant={activeOrders.length > 0 ? 'dot' : 'standard'}>
+                      <DirectionsBikeIcon />
+                    </Badge>
+                  } 
+                  {...a11yProps(1)} />
+                <Tab 
+                  label="Cart" 
+                  icon={
+                    <Badge 
+                      classes={{ badge: classes.customBadge }} 
+                      badgeContent={cart.length}>
+                        <MenuBookIcon />
+                    </Badge>
+                  } 
+                  {...a11yProps(2)} 
+                />
+                <Tab label="Account" icon={<FaceIcon />} {...a11yProps(3)} />
+            </Tabs>
+          </div>
+        </div>
+      }
+
+      {
+        !loading && !user.displayName &&
+        <div className="display-name">
+          <h1 className="welcome-text">Welcome!</h1>
+          <TextField onChange={(e) => setDisplayName(e.target.value)} className="displayNameInput" type="text" label="Your full name" variant="outlined" />
+          <br/>
+
+          <div>
+            <Button disabled={displayName.length === 0} onClick={saveDisplayName} size='large' className="displayNameSaveBtn" variant="contained" color="primary">
+                Next
+            </Button>
+          </div>
+          
+        </div>
+      }
     </div>
   )
 }
