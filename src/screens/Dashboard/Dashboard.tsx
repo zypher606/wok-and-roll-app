@@ -14,6 +14,7 @@ import Delivery from './Delivery';
 import { User } from '../../models/User';
 import logo from "../../assets/images/logo.png";
 import { v4 as uuidv4 } from "uuid";
+import { APP_VERSION } from '../../constants/app.constants';
 
 const db = firebase.firestore();
 
@@ -74,6 +75,7 @@ export default function Dashboard() {
   const [user, setUser] = useState<any>({});
   const [displayName, setDisplayName] = useState('');
   const [loading, setLoading] = useState(true);
+  const [versionMismatch, setVersionMismatch] = useState(false);
 
   const handleChange = (event: any, newValue: any) => {
     setActiveTab(newValue);
@@ -83,6 +85,7 @@ export default function Dashboard() {
   useEffect(() => {
     fetchItems();
     fetchUserByPhone(User.getInstance().UserData.phone);
+    runVersionChecks();
   }, []);
 
   const fetchItems = async () => {
@@ -189,6 +192,21 @@ export default function Dashboard() {
     }).catch(err => {});
   }
 
+  const runVersionChecks = async () => {
+    const snapshot: any = await db.collection('updates').get();
+    const versions: string[] = [];
+    await snapshot.forEach(async (doc: any) => {
+      const data = await doc.data();
+      versions.push(data.version);
+    });
+    
+    const hasNewUpdate =  !versions.every(v => v <= APP_VERSION);
+    if (hasNewUpdate) {
+      setVersionMismatch(true);
+      setLoading(false);
+    }
+  }
+
   return (
     <div>
 
@@ -200,7 +218,14 @@ export default function Dashboard() {
         </div>
       }
       {
-        !loading && user.displayName &&
+        !loading && versionMismatch &&
+        <div style={{textAlign: 'center'}}>
+          <img className='logo' src={logo} alt="app logo" />
+          <h2 style={{fontWeight: 100 }}>A new version has arrived. <br/>Please update from Play Store. <br/>🙂</h2>
+        </div>
+      }
+      {
+        !loading && !versionMismatch && user.displayName &&
         <div>
           <div className="tab-body">
             <TabPanel value={activeTab} index={0}>
@@ -261,7 +286,7 @@ export default function Dashboard() {
       }
 
       {
-        !loading && !user.displayName &&
+        !loading && !versionMismatch && !user.displayName &&
         <div className="display-name">
           <h1 className="welcome-text">Welcome!</h1>
           <TextField onChange={(e) => setDisplayName(e.target.value)} className="displayNameInput" type="text" label="Your full name" variant="outlined" />
